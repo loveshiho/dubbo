@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_01?useSSL=false&autoReconnect=true&characterEncoding=utf8
+    username: root
+    password: zt20040801.
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.akai.pojo

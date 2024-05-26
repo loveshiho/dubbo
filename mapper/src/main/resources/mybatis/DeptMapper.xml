@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akai.mapper.DeptMapper">
+
+    <resultMap type="dept" id="DeptMap">
+        <result property="deptno" column="DEPTNO" jdbcType="INTEGER"/>
+        <result property="dname" column="DNAME" jdbcType="VARCHAR"/>
+        <result property="loc" column="LOC" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="DeptMap">
+        select DEPTNO, DNAME, LOC
+        from dept
+        where DEPTNO = #{deptno}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="DeptMap">
+        select
+        DEPTNO, DNAME, LOC
+        from dept
+        <where>
+            <if test="deptno != null">
+                and DEPTNO = #{deptno}
+            </if>
+            <if test="dname != null and dname != ''">
+                and DNAME = #{dname}
+            </if>
+            <if test="loc != null and loc != ''">
+                and LOC = #{loc}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from dept
+        <where>
+            <if test="deptno != null">
+                and DEPTNO = #{deptno}
+            </if>
+            <if test="dname != null and dname != ''">
+                and DNAME = #{dname}
+            </if>
+            <if test="loc != null and loc != ''">
+                and LOC = #{loc}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="deptno" useGeneratedKeys="true">
+        insert into dept(DNAMELOC)
+        values (#{dname}#{loc})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="deptno" useGeneratedKeys="true">
+        insert into dept(DNAMELOC)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dname}#{entity.loc})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="deptno" useGeneratedKeys="true">
+        insert into dept(DNAMELOC)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.dname}#{entity.loc})
+        </foreach>
+        on duplicate key update
+        DNAME = values(DNAME)LOC = values(LOC)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update dept
+        <set>
+            <if test="dname != null and dname != ''">
+                DNAME = #{dname},
+            </if>
+            <if test="loc != null and loc != ''">
+                LOC = #{loc},
+            </if>
+        </set>
+        where DEPTNO = #{deptno}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from dept
+        where DEPTNO = #{deptno}
+    </delete>
+
+</mapper>
+

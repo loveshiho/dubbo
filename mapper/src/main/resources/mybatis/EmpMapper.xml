@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.akai.mapper.EmpMapper">
+
+    <resultMap type="emp" id="EmpMap">
+        <result property="empno" column="EMPNO" jdbcType="INTEGER"/>
+        <result property="ename" column="ENAME" jdbcType="VARCHAR"/>
+        <result property="job" column="JOB" jdbcType="VARCHAR"/>
+        <result property="mgr" column="MGR" jdbcType="INTEGER"/>
+        <result property="hiredate" column="HIREDATE" jdbcType="TIMESTAMP"/>
+        <result property="sal" column="SAL" jdbcType="NUMERIC"/>
+        <result property="comm" column="COMM" jdbcType="NUMERIC"/>
+        <result property="deptno" column="DEPTNO" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="EmpMap">
+        select *
+        from emp
+        where EMPNO = #{empno}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAll" resultMap="EmpMap">
+        select *
+        from emp
+        <where>
+            <if test="empno != null">
+                and EMPNO = #{empno}
+            </if>
+            <if test="ename != null and ename != ''">
+                and ENAME = #{ename}
+            </if>
+            <if test="job != null and job != ''">
+                and JOB = #{job}
+            </if>
+            <if test="mgr != null">
+                and MGR = #{mgr}
+            </if>
+            <if test="hiredate != null">
+                and HIREDATE = #{hiredate}
+            </if>
+            <if test="sal != null">
+                and SAL = #{sal}
+            </if>
+            <if test="comm != null">
+                and COMM = #{comm}
+            </if>
+            <if test="deptno != null">
+                and DEPTNO = #{deptno}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from emp
+        <where>
+            <if test="empno != null">
+                and EMPNO = #{empno}
+            </if>
+            <if test="ename != null and ename != ''">
+                and ENAME = #{ename}
+            </if>
+            <if test="job != null and job != ''">
+                and JOB = #{job}
+            </if>
+            <if test="mgr != null">
+                and MGR = #{mgr}
+            </if>
+            <if test="hiredate != null">
+                and HIREDATE = #{hiredate}
+            </if>
+            <if test="sal != null">
+                and SAL = #{sal}
+            </if>
+            <if test="comm != null">
+                and COMM = #{comm}
+            </if>
+            <if test="deptno != null">
+                and DEPTNO = #{deptno}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="empno" useGeneratedKeys="true">
+        insert into emp(ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+        values (#{ename}#{job}#{mgr}#{hiredate}#{sal}#{comm}#{deptno})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="empno" useGeneratedKeys="true">
+        insert into emp(ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.ename}#{entity.job}#{entity.mgr}#{entity.hiredate}#{entity.sal}#{entity.comm}#{entity.deptno})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="empno" useGeneratedKeys="true">
+        insert into emp(ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.ename}#{entity.job}#{entity.mgr}#{entity.hiredate}#{entity.sal}#{entity.comm}#{entity.deptno})
+        </foreach>
+        on duplicate key update
+        ENAME = values(ENAME)JOB = values(JOB)MGR = values(MGR)HIREDATE = values(HIREDATE)SAL = values(SAL)COMM =
+        values(COMM)DEPTNO = values(DEPTNO)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update emp
+        <set>
+            <if test="ename != null and ename != ''">
+                ENAME = #{ename},
+            </if>
+            <if test="job != null and job != ''">
+                JOB = #{job},
+            </if>
+            <if test="mgr != null">
+                MGR = #{mgr},
+            </if>
+            <if test="hiredate != null">
+                HIREDATE = #{hiredate},
+            </if>
+            <if test="sal != null">
+                SAL = #{sal},
+            </if>
+            <if test="comm != null">
+                COMM = #{comm},
+            </if>
+            <if test="deptno != null">
+                DEPTNO = #{deptno},
+            </if>
+        </set>
+        where EMPNO = #{empno}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from emp
+        where EMPNO = #{empno}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,8 @@
+dubbo:
+  application:
+    name: dubbo-provider
+  registry:
+    address: zookeeper://172.16.121.130:2181
+spring:
+  profiles:
+    active: mybatis
